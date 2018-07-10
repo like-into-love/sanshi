@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sanshi.mapper.TbItemMapper">
+    <resultMap id="BaseResultMap" type="com.sanshi.pojo.TbItem">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="sell_point" jdbcType="VARCHAR" property="sellPoint"/>
+        <result column="price" jdbcType="BIGINT" property="price"/>
+        <result column="num" jdbcType="INTEGER" property="num"/>
+        <result column="barcode" jdbcType="VARCHAR" property="barcode"/>
+        <result column="image" jdbcType="VARCHAR" property="image"/>
+        <result column="cid" jdbcType="BIGINT" property="cid"/>
+        <result column="status" jdbcType="TINYINT" property="status"/>
+        <result column="created" jdbcType="TIMESTAMP" property="created"/>
+        <result column="updated" jdbcType="TIMESTAMP" property="updated"/>
+    </resultMap>
+
+    <sql id="tbItem_field">
+		id,title,sell_point,price,num,barcode,image,cid,status,created,updated
+	</sql>
+
+    <!-- 根据id查询商品 -->
+    <select id="getTbItemById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="tbItem_field"/>
+        from tb_item where id=#{itemId}
+    </select>
+    <!-- 查询全部商品 -->
+    <select id="findAllTbItem" resultType="com.sanshi.pojo.TbItem">
+        select
+        <include refid="tbItem_field"/>
+        from tb_item
+    </select>
+    <!-- 添加商品 -->
+    <insert id="insertTbItem" parameterType="com.sanshi.pojo.TbItem">
+        insert into tb_item(
+        <include refid="tbItem_field"/>
+        )
+        value(#{id},#{title},#{sellPoint},#{price},#{num},#{barcode},#{image},#{cid},#{status},#{created},#{updated})
+    </insert>
+
+    <!-- 根据id修改商品状态 通过注解多个参数就不用指定parameterType -->
+    <update id="updateItemStatus">
+        update tb_item set tb_item.status=#{status}
+        where tb_item.id in
+        <!-- 遍历的集合名字与@Parmar里面的名字一样 -->
+        <foreach collection="list" item="id" open="(" separator=","
+                 close=")">
+            #{id}
+        </foreach>
+
+
+    </update>
+</mapper>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sanshi.search.mapper.SolrItemMapper">
+    <sql id="solrItem_field">
+        <!--有几个需要改别名 ，因为跟实体类不对应，给成域实体类一样的名  -->
+        i.id,i.title,i.sell_point sellPoint,i.price,i.image,c.name categoryName,d.item_desc itemDesc
+    </sql>
+    <select id="getSolrItem" resultType="com.sanshi.pojo.SolrItem">
+        SELECT
+        <include refid="solrItem_field"/>
+        FROM tb_item_desc d LEFT JOIN tb_item i ON d.item_id=i.id LEFT JOIN
+        tb_item_cat c ON c.id =i.cid WHERE i.status='1'
+    </select>
+    <select id="getByIdItems" parameterType="long"
+            resultType="com.sanshi.pojo.SolrItem">
+        SELECT
+        <include refid="solrItem_field"/>
+        FROM tb_item_desc d LEFT JOIN tb_item i ON d.item_id=i.id LEFT JOIN
+        tb_item_cat c ON c.id =i.cid WHERE i.status='1' and i.id=#{itemId}
+    </select>
+</mapper>

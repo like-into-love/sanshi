@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sanshi.mapper.TbItemParamItemMapper">
+	<resultMap id="BaseResultMap" type="com.sanshi.pojo.TbItemParamItem">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="item_id" jdbcType="BIGINT" property="itemId" />
+		<result column="created" jdbcType="TIMESTAMP" property="created" />
+		<result column="updated" jdbcType="TIMESTAMP" property="updated" />
+	</resultMap>
+
+	<sql id="tbItemParamItem_field">
+		item_id,created,updated,param_data
+	</sql>
+
+	<insert id="addTbItemParamItem" parameterType="com.sanshi.pojo.TbItemParamItem">
+		insert into tb_item_param_item(
+		<include refid="tbItemParamItem_field" />
+		)
+		value(#{itemId},#{created},#{updated},#{paramData})
+
+	</insert>
+
+
+
+</mapper>

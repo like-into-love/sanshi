@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>sanshi-parent</artifactId>
+        <groupId>com.sanshi</groupId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../sanshi-parent/pom.xml</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>sanshi-manager-web</artifactId>
+    <packaging>war</packaging>
+    <dependencies>
+        <!--加入商品管理暴露接口项目的依赖 -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>sanshi-manager-interface</artifactId>
+        </dependency>
+        <!-- 加入内容暴露接口项目的依赖 -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>sanshi-cms-interface</artifactId>
+        </dependency>
+        <!-- 加入搜索索引暴露接口项目的依赖 -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>sanshi-search-interface</artifactId>
+        </dependency>
+        <!-- web依赖 -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet.jsp</groupId>
+            <artifactId>jsp-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+        </dependency>
+
+        <!--spring依赖 -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+        </dependency>
+        <!-- 分布式配置 -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>dubbo</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.zookeeper</groupId>
+            <artifactId>zookeeper</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.101tec</groupId>
+            <artifactId>zkclient</artifactId>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <configuration>
+                    <port>8081</port>
+                    <path>/</path>
+                    <uriEncoding>UTF-8</uriEncoding>
+                    <server>tomcat7</server>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

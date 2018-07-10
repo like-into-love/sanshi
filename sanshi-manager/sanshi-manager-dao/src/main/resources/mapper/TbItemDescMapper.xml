@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sanshi.mapper.TbItemDescMapper">
+    <resultMap id="BaseResultMap" type="com.sanshi.pojo.TbItemDesc">
+        <id column="item_id" jdbcType="BIGINT" property="itemId"/>
+        <result column="created" jdbcType="TIMESTAMP" property="created"/>
+        <result column="updated" jdbcType="TIMESTAMP" property="updated"/>
+    </resultMap>
+
+    <sql id="tbItemDesc_field">
+        item_id as itemId,created,updated,item_desc as itemDesc
+    </sql>
+
+    <insert id="insertTbItemDesc" parameterType="com.sanshi.pojo.TbItemDesc">
+		insert into
+		tb_item_desc(item_id,created,updated,item_desc)
+		value(#{itemId},#{created},#{updated},#{itemDesc})
+	</insert>
+
+    <select id="getTbItemDescById" parameterType="long" resultType="com.sanshi.pojo.TbItemDesc">
+        select
+        <include refid="tbItemDesc_field"/>
+        from tb_item_desc where item_id=#{itemId}
+    </select>
+
+</mapper>

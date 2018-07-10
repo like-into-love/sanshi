@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jms="http://www.springframework.org/schema/jms"
+	xsi:schemaLocation="http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
+
+	<!--ActiveMq连接工厂 -->
+	<bean id="mqConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="tcp://118.89.43.25:61616" />
+	</bean>
+	<!-- Spring用于管理真正的ConnectionFactory -->
+	<bean id="connectionFactory"
+		class="org.springframework.jms.connection.CachingConnectionFactory">
+		<property name="targetConnectionFactory" ref="mqConnectionFactory" />
+		<!--session缓存数量 -->
+		<property name="sessionCacheSize" value="100" />
+	</bean>
+	<!--spring JmsTemplate -->
+	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+		<constructor-arg name="connectionFactory" ref="connectionFactory" />
+	</bean>
+	<!--配置点对点 与发布者的名字一样 -->
+	<bean id="queue" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg name="name" value="queue-production" />
+	</bean>
+	<!--配置订阅与发布 与发布者的名字一样 -->
+	<bean id="topic" class="org.apache.activemq.command.ActiveMQTopic">
+		<constructor-arg name="name" value="topic-production" />
+	</bean>
+	<!--自定义监听器类交个spring监听器 -->
+	<bean id="itemChangeListener" class="com.sanshi.search.listener.ItemChangeListener"></bean>
+	<!-- 配置消息队列监听器 -->
+	<bean
+		class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="connectionFactory" />
+		<property name="messageListener" ref="itemChangeListener" />
+		<property name="destination" ref="queue" />
+	</bean>
+</beans>

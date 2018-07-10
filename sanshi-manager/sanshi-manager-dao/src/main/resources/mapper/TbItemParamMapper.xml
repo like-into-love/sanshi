@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sanshi.mapper.TbItemParamMapper">
+
+	<!--注意，一般为了查询效率mybatis逆向工程不会生成大文本字段 -->
+	<resultMap id="BaseResultMap" type="com.sanshi.pojo.TbItemParam">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="item_cat_id" jdbcType="BIGINT" property="itemCatId" />
+		<result column="created" jdbcType="TIMESTAMP" property="created" />
+		<result column="updated" jdbcType="TIMESTAMP" property="updated" />
+		<result column="param_data" jdbcType="VARCHAR" property="paramData" />
+	</resultMap>
+
+	<!-- 带大文本字段param_data -->
+	<sql id="tbItemParam_field">
+		t.item_cat_id,t.created,t.updated,t.param_data
+	</sql>
+
+
+	<select id="selectTbItemParam" parameterType="long"
+		resultMap="BaseResultMap">
+		select
+		<include refid="tbItemParam_field" />
+		from tb_item_param t
+		where t.item_cat_id = #{id}
+	</select>
+
+	<insert id="insertItemParam" parameterType="com.sanshi.pojo.TbItemParam">
+		insert into tb_item_param(
+		<include refid="tbItemParam_field" />
+		)
+		value(#{itemCatId},#{created},#{created},#{paramData})
+	</insert>
+
+</mapper>

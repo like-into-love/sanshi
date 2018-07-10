@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sanshi.mapper.TbContentCategoryMapper">
+	<resultMap id="BaseResultMap" type="com.sanshi.pojo.TbContentCategory">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="parent_id" jdbcType="BIGINT" property="parentId" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="status" jdbcType="INTEGER" property="status" />
+		<result column="sort_order" jdbcType="INTEGER" property="sortOrder" />
+		<result column="is_parent" jdbcType="BIT" property="isParent" />
+		<result column="created" jdbcType="TIMESTAMP" property="created" />
+		<result column="updated" jdbcType="TIMESTAMP" property="updated" />
+	</resultMap>
+	<!--带id -->
+	<sql id="tbContentCategory_field">
+		id,parent_id,name,status,sort_order,is_parent,created,updated
+	</sql>
+	<!-- 不带id -->
+	<sql id="tbContentCategory_field_notid">
+		parent_id,name,status,sort_order,is_parent,created,updated
+	</sql>
+
+	<!--查询内容 -->
+	<select id="findTbContentCategoryById" parameterType="long"
+		resultMap="BaseResultMap">
+		select
+		<include refid="tbContentCategory_field" />
+		from tb_content_category where parent_id=#{parentId}
+	</select>
+
+	<!--查询内容，在service判断是否有子目录 -->
+	<select id="selectByPrimaryKey" parameterType="long" resultMap="BaseResultMap">
+		select
+		<include refid="tbContentCategory_field" />
+		from tb_content_category where id=#{parentId}
+	</select>
+	
+	<update id="updateByPrimaryKey" parameterType="com.sanshi.pojo.TbContentCategory">
+		update
+		tb_content_category set is_parent=#{isParent} where id=#{id}
+	</update>
+
+	<!--添加内容分类 -->
+	<insert id="insetTbContentCategory" parameterType="com.sanshi.pojo.TbContentCategory">
+		<!-- 在执行插入语句后返回自增长主键id值 -->
+		<selectKey keyProperty="id" resultType="long" order="AFTER">
+			select last_insert_id() <!--取到最后生成的主键，自动放到pojo的id属性 -->
+		</selectKey>
+
+		insert into tb_content_category(
+		<include refid="tbContentCategory_field_notid" />
+		)
+		value(#{parentId},#{name},#{status},#{sortOrder},#{isParent},#{created},#{updated})
+	</insert>
+
+</mapper>

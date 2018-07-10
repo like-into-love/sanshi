@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
+		http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+    <context:component-scan base-package="com.sanshi.service"/>
+    <!-- 加载数据源文件 -->
+    <context:property-placeholder location="classpath:resource/*.properties"/>
+    <!--配置数据库链接池 -->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+          init-method="init" destroy-method="close">
+        <!-- 可以不要配置，可以自动识别 -->
+        <!-- <property name="driverClassName" value="${jdbc.driver}" /> -->
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <!-- 配置初始化大小、最小、最大 -->
+        <property name="maxActive" value="100"/>
+        <property name="initialSize" value="1"/>
+        <property name="minIdle" value="1"/>
+        <!-- 配置获取连接等待超时的时间 -->
+        <property name="maxWait" value="60000"/>
+    </bean>
+
+    <!-- 配置SqlSessionFactoryBean 开启一级缓存，范围一次会话-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"></property>
+        <!-- 加载mybatis-config配置文件 -->
+        <property name="configLocation" value="classpath:mybatis-config.xml"></property>
+        <!-- 加载mapper.xml文件 如果在dao的pom加入配置可以不用配置了 -->
+        <property name="mapperLocations" value="classpath:mapper/*Mapper.xml"></property>
+    </bean>
+    <!--配置接口扫描 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.sanshi.mapper"></property>
+    </bean>
+    <!--配置事物管理器 -->
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <aop:config>
+        <aop:pointcut expression="execution (* com.sanshi.service..*(..))"
+                      id="txPoint"/>
+        <aop:advisor advice-ref="txAdove" pointcut-ref="txPoint"/>
+    </aop:config>
+    <!--配置事务增强 -->
+    <tx:advice id="txAdove" transaction-manager="transactionManager">
+        <tx:attributes>
+            <!-- 对get方法设置只读 ； REQUIRED：支持当前事务，如果当前没有事务，就新建一个事务。这是最常见的选择。 SUPPORTS：支持当前事务，如果当前没有事务，就以非事务方式执行。
+                MANDATORY：支持当前事务，如果当前没有事务，就抛出异常。 REQUIRES_NEW：新建事务，如果当前存在事务，把当前事务挂起。 NOT_SUPPORTED：以非事务方式执行操作，如果当前存在事务，就把当前事务挂起。
+                NEVER：以非事务方式执行，如果当前存在事务，则抛出异常。 NESTED：支持当前事务，如果当前事务存在，则执行一个嵌套事务，如果当前没有事务，就新建一个事务。 -->
+            <tx:method name="add*" propagation="REQUIRED"/>
+            <tx:method name="save*" propagation="REQUIRED"/>
+            <tx:method name="update*" propagation="REQUIRED"/>
+            <tx:method name="delete*" propagation="REQUIRED"/>
+            <tx:method name="get*" propagation="SUPPORTS" read-only="true"/>
+            <tx:method name="find*" propagation="SUPPORTS" read-only="true"/>
+            <tx:method name="count*" propagation="SUPPORTS" read-only="true"/>
+            <tx:method name="select*" propagation="SUPPORTS" read-only="true"/>
+            <tx:method name="*" propagation="SUPPORTS"
+                       rollback-for="java.lang.RuntimeException"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <!-- 连接池配置 -->
+    <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <!-- 最大连接数 -->
+        <property name="maxTotal" value="30" />
+        <!-- 最大空闲连接数 -->
+        <property name="maxIdle" value="10" />
+        <!-- 每次释放连接的最大数目 -->
+        <property name="numTestsPerEvictionRun" value="1024" />
+        <!-- 释放连接的扫描间隔（毫秒） -->
+        <property name="timeBetweenEvictionRunsMillis" value="30000" />
+        <!-- 连接最小空闲时间 -->
+        <property name="minEvictableIdleTimeMillis" value="1800000" />
+        <!-- 连接空闲多久后释放, 当空闲时间>该值 且 空闲连接>最大空闲连接数 时直接释放 -->
+        <property name="softMinEvictableIdleTimeMillis" value="10000" />
+        <!-- 获取连接时的最大等待毫秒数,小于零:阻塞不确定的时间,默认-1 -->
+        <property name="maxWaitMillis" value="1500" />
+        <!-- 在获取连接的时候检查有效性, 默认false -->
+        <property name="testOnBorrow" value="true" />
+        <!-- 在空闲时检查有效性, 默认false -->
+        <property name="testWhileIdle" value="true" />
+        <!-- 连接耗尽时是否阻塞, false报异常,ture阻塞直到超时, 默认true -->
+        <property name="blockWhenExhausted" value="false" />
+    </bean>
+    <!-- jedis客户端单机版 -->
+
+    <bean id="jedisPool" class="redis.clients.jedis.JedisPool" >
+        <constructor-arg name="host" value="118.89.43.25"></constructor-arg>
+        <constructor-arg name="port" value="6379"></constructor-arg>
+        <constructor-arg name="poolConfig" ref="jedisPoolConfig"></constructor-arg>
+    </bean>
+    <bean id="jedisClientPool" class="com.sanshi.jedis.impl.JedisClientPool">
+    </bean>
+    <!--引入消息队列配置 -->
+    <import resource="activity-config.xml"/>
+
+    <!-- ======================= 配置dubbo服务提供 ======================================= -->
+    <!-- 服务者名字 -->
+    <dubbo:application name="sanshi-service-provider"/>
+    <!-- 注册仓库地址：zookeeper组件，118.89.43.25:2181 -->
+    <dubbo:registry address="zookeeper://118.89.43.25:2181"/>
+    <!-- 用dubbo协议在20880端口暴露服务 -->
+    <dubbo:protocol name="dubbo" port="20880"/>
+    <!-- 声明暴露接口的服务 ref:接口的实现与@Service("***")里面的名字一样 -->
+    <dubbo:service interface="com.sanshi.service.TbItemService"
+                   ref="tbItemServiceImpl" timeout="3000"/>
+    <dubbo:service interface="com.sanshi.service.TbItemCatService"
+                   ref="tbItemCatServiceImpl" timeout="3000"/>
+    <dubbo:service interface="com.sanshi.service.PictureService"
+                   ref="pictureServiceImpl" timeout="3000"/>
+    <dubbo:service interface="com.sanshi.service.TbItemParamService"
+                   ref="tbItemParamServiceImpl" timeout="3000"/>
+</beans>
