@@ -17,6 +17,8 @@
         <module>../sanshi-search-web</module>
         <module>../sanshi-portal-web</module>
         <module>../sanshi-item-web</module>
+        <module>../sanshi-sso</module>
+        <module>../sanshi-sso-web</module>
     </modules>
     <properties>
         <!--定义spring -->
@@ -25,7 +27,6 @@
         <spring.context.support.version>4.3.17.RELEASE</spring.context.support.version>
         <!-- spring测试包 -->
         <spring.test.version>4.3.17.RELEASE</spring.test.version>
-
         <!-- aop事务通知 -->
         <aspectjweaver.version>1.8.13</aspectjweaver.version>
         <!--定义mybatis -->
@@ -61,6 +62,8 @@
         <solrj.version>7.3.1</solrj.version>
         <!--jedis客户端 -->
         <jedis.version>2.9.0</jedis.version>
+        <!--freemarker模板架包-->
+        <freemarker.version>2.3.23</freemarker.version>
         <!--jdk插件 -->
         <jdk.version>1.8</jdk.version>
         <!-- maven编译版本 -->
@@ -151,8 +154,28 @@
                 <artifactId>sanshi-item-web</artifactId>
                 <version>${project.service.version}</version>
             </dependency>
+            <!--单点登陆模块-->
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>sanshi-sso</artifactId>
+                <version>${project.service.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>sanshi-sso-interface</artifactId>
+                <version>${project.service.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>sanshi-sso-service</artifactId>
+                <version>${project.service.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>sanshi-sso-web</artifactId>
+                <version>${project.service.version}</version>
+            </dependency>
             <!-- 项目的模块依赖结束 -->
-
 
             <!-- 加入单元测试 -->
             <dependency>
@@ -161,6 +184,13 @@
                 <version>${junit.version}</version>
                 <scope>test</scope>
             </dependency>
+            <!-- freemarker模板引擎-->
+            <dependency>
+                <groupId>org.freemarker</groupId>
+                <artifactId>freemarker</artifactId>
+                <version>${freemarker.version}</version>
+            </dependency>
+
             <!-- 加入日志 -->
             <dependency>
                 <groupId>log4j</groupId>

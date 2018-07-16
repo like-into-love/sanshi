@@ -2,6 +2,7 @@ package com.sanshi.service.impl;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.sanshi.jedis.JedisClient;
 import com.sanshi.utils.JsonUtils;
@@ -36,6 +37,8 @@ public class TbItemServiceImpl implements TbItemService {
     private String BASE;
     @Value("${DESC}")
     private String DESC;
+    @Value("${OVERTIME}")
+    private Integer OVERTIME;
 /*    @Value("${PARAM}")
     private String PARAM;*/
 
@@ -52,7 +55,7 @@ public class TbItemServiceImpl implements TbItemService {
     JmsTemplate jmsTemplate;
     // 与bean id一样
     @Autowired
-    Destination queue;
+    Destination topic;
 
     @Autowired
     JedisClient jedisClient;
@@ -110,7 +113,7 @@ public class TbItemServiceImpl implements TbItemService {
             return TaotaoResult.build(500, "添加商品 出错");
         }
         // 发送消息队列
-        jmsTemplate.send(queue, new MessageCreator() {
+        jmsTemplate.send(topic, new MessageCreator() {
             @Override
             public Message createMessage(Session session) throws JMSException {
                 TextMessage message = session.createTextMessage(itemId + "");
@@ -135,7 +138,7 @@ public class TbItemServiceImpl implements TbItemService {
         //取缓存
         try {
             String json = jedisClient.get(ITEM_INF + ":" + itemId + "" + ":" + BASE);
-            System.out.println("商品基本缓存读取成功");
+            // System.out.println("商品基本缓存读取成功");
             if (StringUtils.isNotBlank(json)) {
                 TbItem tbItem = JsonUtils.jsonToPojo(json, TbItem.class);
                 return tbItem;
@@ -149,7 +152,8 @@ public class TbItemServiceImpl implements TbItemService {
         //ITEM_IFO:123456:BASE,一种格式
         try {
             jedisClient.set(ITEM_INF + ":" + itemId + "" + ":" + BASE, JsonUtils.objectToJson(tbItem));
-            System.out.println("商品基本缓存加入成功");
+            jedisClient.expire(ITEM_INF + ":" + itemId + "" + ":" + BASE, OVERTIME);
+            //System.out.println("商品基本缓存加入成功");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -169,15 +173,46 @@ public class TbItemServiceImpl implements TbItemService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        System.out.println("第一次查询数据库");
         TbItemDesc tbItemDesc = tbItemDescMapper.getTbItemDescById(itemId);
         //存缓存
         try {
             jedisClient.set(ITEM_INF + ":" + itemId + "" + ":" + DESC, JsonUtils.objectToJson(tbItemDesc));
+            //设置过期时间为一天
+            jedisClient.expire(ITEM_INF + ":" + itemId + "" + ":" + DESC, OVERTIME);
             System.out.println("商品详情缓存加入成功");
         } catch (Exception e) {
             e.printStackTrace();
         }
         return tbItemDesc;
+    }
+
+    @Override
+    public String getTbItemParamItemByid(long itemId) throws Exception {
+        StringBuilder sb = new StringBuilder();
+        try {
+            TbItemParamItem paramItemByid = tbItemParamItemMapper.getTbItemParamItemByid(itemId);
+            String paramData = paramItemByid.getParamData();
+            List<Map> maps = JsonUtils.jsonToList(paramData, Map.class);
+            sb.append("<table cellpadding=\"0\" cellspacing=\"1\" width=\"100%\" border=\"0\" class=\"Ptable\">\n");
+            sb.append("<tbody>\n");
+            for (Map map : maps) {
+                sb.append("<tr>\n");
+                sb.append("<th class=\"tdTitle\" colspan=\"2\">" + map.get("group") + "</th>\n");
+                sb.append("        </tr>\n");
+                List<Map> params = (List<Map>) map.get("params");
+                for (Map map1 : params) {
+                    sb.append("<tr>\n");
+                    sb.append("<td class=\"tdTitle\">" + map1.get("k") + "</td>\n");
+                    sb.append("<td>" + map1.get("v") + "</td>\n");
+                }
+            }
+            sb.append("</tbody>\n");
+            sb.append("</table>\n");
+        } catch (Exception e) {
+           throw new Exception();
+        }
+        return sb.toString();
     }
 
 }

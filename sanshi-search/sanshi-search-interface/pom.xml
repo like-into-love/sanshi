@@ -11,11 +11,17 @@
 
     <artifactId>sanshi-search-interface</artifactId>
     <dependencies>
+        <!--加入POJO项目的依赖 -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>sanshi-manager-pojo</artifactId>
+        </dependency>
         <!--加入commons项目的依赖 -->
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>sanshi-commons</artifactId>
         </dependency>
+
     </dependencies>
 
 </project>

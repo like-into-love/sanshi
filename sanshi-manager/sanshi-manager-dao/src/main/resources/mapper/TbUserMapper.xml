@@ -1,13 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sanshi.mapper.TbUserMapper">
-  <resultMap id="BaseResultMap" type="com.sanshi.pojo.TbUser">
-    <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="username" jdbcType="VARCHAR" property="username" />
-    <result column="password" jdbcType="VARCHAR" property="password" />
-    <result column="phone" jdbcType="VARCHAR" property="phone" />
-    <result column="email" jdbcType="VARCHAR" property="email" />
-    <result column="created" jdbcType="TIMESTAMP" property="created" />
-    <result column="updated" jdbcType="TIMESTAMP" property="updated" />
-  </resultMap>
+    <resultMap id="BaseResultMap" type="com.sanshi.pojo.TbUser">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="created" jdbcType="TIMESTAMP" property="created"/>
+        <result column="updated" jdbcType="TIMESTAMP" property="updated"/>
+    </resultMap>
+
+    <sql id="tbUser_filed">
+    id,username,password,phone,email,created,updated
+    </sql>
+
+    <select id="getTbUserByName" parameterType="string" resultMap="BaseResultMap">
+        select
+        <include refid="tbUser_filed"/>
+        from tb_user where username=#{userName};
+    </select>
+
+    <select id="getTbUserByPhone" parameterType="string" resultMap="BaseResultMap">
+        select
+        <include refid="tbUser_filed"/>
+        from tb_user where phone=#{phone};
+    </select>
+
+    <select id="getTbUserByEmail" parameterType="string" resultMap="BaseResultMap">
+        select
+        <include refid="tbUser_filed"/>
+        from tb_user where email=#{email};
+    </select>
+
+    <insert id="insertTbUser" parameterType="com.sanshi.pojo.TbUser">
+        insert into tb_user(username, password, phone, email, created, updated)
+        value (#{username},#{password},#{phone},#{email},#{created},#{updated})
+    </insert>
+    <select id="getTbUser" resultMap="BaseResultMap">
+        select
+        <include refid="tbUser_filed"/>
+        from tb_user where username=#{0} and password=#{1}
+    </select>
 </mapper>

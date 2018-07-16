@@ -34,6 +34,6 @@
 		class="org.springframework.jms.listener.DefaultMessageListenerContainer">
 		<property name="connectionFactory" ref="connectionFactory" />
 		<property name="messageListener" ref="itemChangeListener" />
-		<property name="destination" ref="queue" />
+		<property name="destination" ref="topic" />
 	</bean>
 </beans>

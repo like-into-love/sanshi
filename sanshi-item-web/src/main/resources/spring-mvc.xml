@@ -11,15 +11,40 @@
           http://www.springframework.org/schema/context/spring-context.xsd http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 
     <context:component-scan base-package="com.sanshi.item.controller"/>
-    <mvc:annotation-driven/>
+    <mvc:annotation-driven>
+        <!--配置@ResponseBody返回json乱码-->
+        <mvc:message-converters register-defaults="true">
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <constructor-arg value="UTF-8"/>
+                <property name="writeAcceptCharset" value="false"/>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
     <mvc:default-servlet-handler/>
-
+    <!--视图解析器-->
     <bean id="resourceViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/WEB-INF/jsp/"/>
         <property name="suffix" value=".jsp"/>
     </bean>
+    <!--freemarker模板配置-->
+    <bean id="freeMarkerConfigurer" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+        <property name="defaultEncoding" value="utf-8"/>
+        <property name="templateLoaderPath" value="/WEB-INF/ftl/"/>
+    </bean>
+
+    <!--&lt;!&ndash;freemarker模板解析器&ndash;&gt;
+    <bean id="freeMarkerViewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+        &lt;!&ndash;上面已经配了这里就不需要配&ndash;&gt;
+        <property name="prefix" value=""/>
+        <property name="suffix" value=".ftl"/>
+        <property name="contentType" value="text/html;charset=utf-8"/>
+        <property name="cache" value="true"/>
+    </bean>-->
+
+    <!--引入消息队列配置 -->
+    <import resource="activity-config.xml"/>
     <!--配置dubbo消费 -->
-    <dubbo:application name="taotao-web-consumer"/>
+    <dubbo:application name="taotao-item-consumer"/>
     <!-- 设置注册仓库地址 -->
     <dubbo:registry address="zookeeper://118.89.43.25:2181"/>
     <!-- 引入服务与服务者提供的接口一样 id与controller层里面的注解名一样才能消费 -->

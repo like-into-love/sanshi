@@ -40,4 +40,12 @@ public interface TbItemService {
      */
     TbItemDesc getTbItemDescById(long itemId);
 
+    /**
+     * 根据商品id查询商品的规格参数
+     *
+     * @param itemId
+     * @return TaotaoResult
+     */
+    String getTbItemParamItemByid(long itemId) throws Exception;
+
 }
