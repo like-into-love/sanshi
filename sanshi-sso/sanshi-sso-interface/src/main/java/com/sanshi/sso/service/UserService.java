@@ -38,5 +38,11 @@ public interface UserService {
      */
     TaotaoResult getUserByToken(String token);
 
+    /**
+     * 用户注销要删除cookie和redis
+     * @param token
+     */
+    void showLogout(String token);
+
 
 }

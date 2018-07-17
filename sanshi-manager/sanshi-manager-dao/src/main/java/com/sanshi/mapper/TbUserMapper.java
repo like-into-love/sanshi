@@ -2,6 +2,7 @@ package com.sanshi.mapper;
 
 
 import com.sanshi.pojo.TbUser;
+import org.apache.ibatis.annotations.Param;
 
 public interface TbUserMapper {
     /**
@@ -42,5 +43,5 @@ public interface TbUserMapper {
      * @param password 密码
      * @return
      */
-    TbUser getTbUser(String username, String password);
+    TbUser getTbUser(@Param("username") String username, @Param("password") String password);
 }

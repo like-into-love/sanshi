@@ -5,6 +5,7 @@ import com.sanshi.pojo.TbUser;
 import com.sanshi.result.TaotaoResult;
 import com.sanshi.sso.jedis.JedisClient;
 import com.sanshi.sso.service.UserService;
+import com.sanshi.utils.CookieUtils;
 import com.sanshi.utils.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,6 +103,10 @@ public class UserServiceImpl implements UserService {
     public TaotaoResult userLogin(String username, String password) {
         password = DigestUtils.md5DigestAsHex(password.getBytes());
         TbUser tbUser = tbUserMapper.getTbUser(username, password);
+        //判断是否登陆成功
+        if (tbUser == null) {
+            return TaotaoResult.build(500, "登陆失败");
+        }
         //生成token
         String token = UUID.randomUUID().toString().replace("-", "");
         //把密码清空，安全
@@ -116,17 +121,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public TaotaoResult getUserByToken(String token) {
-        String json = jedisClient.get("REDIS_USER_SESSION_KEY + token");
+        String json = jedisClient.get("REDIS_USER_SESSION_KEY" + token);
         //如果为空token以过期
         if (StringUtils.isBlank(json)) {
             TaotaoResult.build(400, "此session已过期，请重新登陆");
         }
         //不为空更新存储时间
-        jedisClient.expire("REDIS_USER_SESSION_KEY + token",SSO_SESSION_EXPIRE);
+        jedisClient.expire("REDIS_USER_SESSION_KEY + token", SSO_SESSION_EXPIRE);
         //如果直接返回TaotaoResult.ok(json),json里面的引号会在页面返回是添上引号
         //所有要把它转成对象
         TbUser tbUser = JsonUtils.jsonToPojo(json, TbUser.class);
         return TaotaoResult.ok(tbUser);
+    }
+
+
+    @Override
+    public void showLogout(String token) {
+      jedisClient.del("REDIS_USER_SESSION_KEY"+token);
     }
 
 }
