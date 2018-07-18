@@ -20,6 +20,7 @@
         <module>../sanshi-sso</module>
         <module>../sanshi-sso-web</module>
         <module>../sanshi-rest</module>
+        <module>../sanshi-cart-web</module>
     </modules>
     <properties>
         <!--定义spring -->
@@ -179,6 +180,12 @@
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>sanshi-rest</artifactId>
+                <version>${project.service.version}</version>
+            </dependency>
+            <!--添加购物车模块-->
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>sanshi-cart-web</artifactId>
                 <version>${project.service.version}</version>
             </dependency>
             <!-- 项目的模块依赖结束 -->
