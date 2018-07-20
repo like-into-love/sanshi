@@ -1,6 +1,7 @@
 package com.sanshi.sso.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 
@@ -24,7 +25,9 @@ public class PageController {
      * @return
      */
     @RequestMapping("/login")
-    public String showLogin() {
+    public String showLogin(String redirectUrl, Model model) {
+        //回显地址，登陆成功后跳转redirectUrl
+        model.addAttribute("redirect", redirectUrl);
         return "login";
     }
 

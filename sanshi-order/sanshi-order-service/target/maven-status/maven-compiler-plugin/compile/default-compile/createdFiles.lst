@@ -1,0 +1,5 @@
+com\sanshi\order\utils\BuyerRate.class
+com\sanshi\order\jedis\impl\JedisClientPool.class
+com\sanshi\order\jedis\impl\JedisClientCluster.class
+com\sanshi\order\service\impl\OrderServiceImpl.class
+com\sanshi\order\utils\OrderState.class

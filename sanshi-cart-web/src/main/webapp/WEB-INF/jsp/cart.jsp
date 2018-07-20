@@ -24,8 +24,9 @@
 <jsp:include page="commons/shortcut.jsp"/>
 <!--shortcut end-->
 <div class="w w1 header clearfix">
-    <div id="logo"><a href="/"><img clstag="clickcart|keycount|xincart|logo" src="/images/taotao-logo.gif"
-                                    title="返回淘淘商城首页" alt="返回淘淘商城首页"></a></div>
+    <div id="logo"><a href="http://localhost:8084"><img clstag="clickcart|keycount|xincart|logo"
+                                                        src="/images/taotao-logo.gif"
+                                                        title="返回淘淘商城首页" alt="返回淘淘商城首页"></a></div>
     <div class="language"><a href="javascript:void(0);" onclick="toEnCart()"></a></div>
     <div class="progress clearfix">
         <ul class="progress-1">
@@ -142,7 +143,7 @@
                     <div class="cart-total-2014">
                         <div class="cart-button">
                   <span class="check-comm-btns" id="checkout-jd">
-                      <a class="checkout" href="http://localhost:8091/order/order-cart.html"
+                      <a class="checkout" href="http://localhost:8092/order/order-cart.html"
                          clstag="clickcart|keycount|xincart|gotoOrderInfo" id="toSettlement">去结算<b></b></a>
                   </span>
                             <span class="combine-btns" style="display:none">

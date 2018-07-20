@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.sanshi.pojo.TbItem;
 import com.sanshi.pojo.TbItemDesc;
+import com.sanshi.pojo.TbItemFreemarker;
 import com.sanshi.result.EasyUIDataGtidResult;
 import com.sanshi.result.TaotaoResult;
 
@@ -47,5 +48,20 @@ public interface TbItemService {
      * @return TaotaoResult
      */
     String getTbItemParamItemByid(long itemId) throws Exception;
+
+    /**
+     * 绑定商品id和模板信息到数据看
+     *
+     * @param tbItemFreemarker
+     */
+    void addTbItemFreemarker(TbItemFreemarker tbItemFreemarker);
+
+    /**
+     * 根据商品id查询是否有模板
+     *
+     * @param itemId 商品id
+     * @return
+     */
+    TbItemFreemarker getTbItemFreemarkerById(long itemId);
 
 }

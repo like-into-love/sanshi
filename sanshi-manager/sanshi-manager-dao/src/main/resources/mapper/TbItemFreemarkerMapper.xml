@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sanshi.mapper.TbItemFreemarkerMapper">
+
+    <insert id="insertTbItemFreemarker" parameterType="com.sanshi.pojo.TbItemFreemarker">
+        insert into tb_item_freemarker(item_freemarker_src,item_id)
+        value (#{itemFreemarkerSrc},#{itemId})
+    </insert>
+
+    <select id="getTbItemFreemarkerById" parameterType="long" resultType="com.sanshi.pojo.TbItemFreemarker">
+        select id,item_freemarker_src as itemFreemarkerSrc, item_id as itemId from tb_item_freemarker where item_id=#{itemId}
+    </select>
+
+</mapper>

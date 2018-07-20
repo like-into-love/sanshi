@@ -8,14 +8,16 @@ public interface SolrItemService {
      *
      * @return
      */
-     TaotaoResult importAllItems();
+    TaotaoResult importAllItems();
 
     /**
      * 索引同步，根据消息队列接收的itemId条件，查询新添加的商品，加入到索引库
      *
      * @return
      */
-     TaotaoResult importByIdItems(long itemId);
+    TaotaoResult importByIdItems(long itemId);
+
+    //还有删除索引，更新索引
 
 
 }

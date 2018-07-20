@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.sanshi.jedis.JedisClient;
+import com.sanshi.mapper.TbItemFreemarkerMapper;
+import com.sanshi.pojo.TbItemFreemarker;
 import com.sanshi.utils.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +52,9 @@ public class TbItemServiceImpl implements TbItemService {
 
     @Autowired
     TbItemParamItemMapper tbItemParamItemMapper;
+
+    @Autowired
+    TbItemFreemarkerMapper tbItemFreemarkerMapper;
 
     @Autowired
     JmsTemplate jmsTemplate;
@@ -116,7 +121,8 @@ public class TbItemServiceImpl implements TbItemService {
         jmsTemplate.send(topic, new MessageCreator() {
             @Override
             public Message createMessage(Session session) throws JMSException {
-                TextMessage message = session.createTextMessage(itemId + "");
+                //在后面拼接一个1代表新添加。以后有删除，更新拼上不同的编号，那边监听的时候才能根据编号，调用方法
+                TextMessage message = session.createTextMessage(itemId + ",1");
                 return message;
             }
         });
@@ -132,7 +138,7 @@ public class TbItemServiceImpl implements TbItemService {
         tbItemMapper.updateItemStatus(status, id);
     }
 
-    //根据商品itemId查询商品
+    //根据商品itemId查询商品,将商品信息存入redis
     @Override
     public TbItem getTbItemById(long itemId) {
         //取缓存
@@ -210,9 +216,25 @@ public class TbItemServiceImpl implements TbItemService {
             sb.append("</tbody>\n");
             sb.append("</table>\n");
         } catch (Exception e) {
-           throw new Exception();
+            throw new Exception();
         }
         return sb.toString();
+    }
+
+    //添加模板
+    @Override
+    public void addTbItemFreemarker(TbItemFreemarker tbItemFreemarker) {
+        tbItemFreemarkerMapper.insertTbItemFreemarker(tbItemFreemarker);
+    }
+
+    @Override
+    public TbItemFreemarker getTbItemFreemarkerById(long itemId) {
+        TbItemFreemarker tbItemFreemarker = tbItemFreemarkerMapper.getTbItemFreemarkerById(itemId);
+        if (tbItemFreemarker != null) {
+            return tbItemFreemarker;
+        }
+        return null;
+
     }
 
 }

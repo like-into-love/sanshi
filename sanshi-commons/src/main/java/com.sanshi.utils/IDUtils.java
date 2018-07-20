@@ -26,7 +26,6 @@ public class IDUtils {
 	  /**
      * 用hashcode打散文件存储
      *
-     * @param path
      * @param filename
      * @return
      */

@@ -21,12 +21,16 @@
         <module>../sanshi-sso-web</module>
         <module>../sanshi-rest</module>
         <module>../sanshi-cart-web</module>
+        <module>../sanshi-order</module>
+        <module>../sanshi-order-web</module>
     </modules>
     <properties>
         <!--定义spring -->
         <spring.version>4.3.17.RELEASE</spring.version>
         <!-- spring与activeMQ整合包 -->
         <spring.context.support.version>4.3.17.RELEASE</spring.context.support.version>
+        <!--activeMQ依赖包-->
+        <activemq.version>5.15.4</activemq.version>
         <!-- spring测试包 -->
         <spring.test.version>4.3.17.RELEASE</spring.test.version>
         <!-- aop事务通知 -->
@@ -188,6 +192,28 @@
                 <artifactId>sanshi-cart-web</artifactId>
                 <version>${project.service.version}</version>
             </dependency>
+            <!--订单模块-->
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>sanshi-order</artifactId>
+                <version>${project.service.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>sanshi-order-interface</artifactId>
+                <version>${project.service.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>sanshi-order-service</artifactId>
+                <version>${project.service.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>sanshi-order-web</artifactId>
+                <version>${project.service.version}</version>
+            </dependency>
+
             <!-- 项目的模块依赖结束 -->
 
             <!-- 加入单元测试 -->
@@ -209,6 +235,12 @@
                 <groupId>log4j</groupId>
                 <artifactId>log4j</artifactId>
                 <version>${log4j.version}</version>
+            </dependency>
+            <!--时间工具包-->
+            <dependency>
+                <groupId>org.joda</groupId>
+                <artifactId>com.springsource.org.joda.time</artifactId>
+                <version>1.6.0</version>
             </dependency>
             <!-- web依赖 -->
             <dependency>
@@ -266,7 +298,7 @@
             <dependency>
                 <groupId>org.apache.activemq</groupId>
                 <artifactId>activemq-all</artifactId>
-                <version>5.15.4</version>
+                <version>${activemq.version}</version>
             </dependency>
 
             <!--事务控制器 -->

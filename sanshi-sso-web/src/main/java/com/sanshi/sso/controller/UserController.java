@@ -57,7 +57,7 @@ public class UserController {
         if (result1.getStatus() == 200) {
             //从后返回的结果中取出token
             String token = result1.getData().toString();
-            //设置到cookie中
+            //设置到cookie中前台在cookie中取出用户名
             CookieUtils.setCookie(req, resp, COOKIE_TOKEN_KEY, token);
             return result1;
         }
@@ -83,7 +83,7 @@ public class UserController {
     @RequestMapping("/logout/{token}")
     public String showLogout(@PathVariable String token, HttpServletResponse resp, HttpServletRequest req) {
         //清除cookie
-        CookieUtils.deleteCookie(req, resp, token);
+        CookieUtils.deleteCookie(req, resp, COOKIE_TOKEN_KEY);
         //清除redis
         userService.showLogout(token);
         return "login";
