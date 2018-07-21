@@ -45,7 +45,7 @@ public class OrderCartController {
 
     ///order/create.html
     @RequestMapping("/create")
-    public String createOrder(Order order, HttpServletRequest request) {
+    public String createOrder(Order order, HttpServletRequest request, HttpServletResponse response) {
         TbUser user = (TbUser) request.getAttribute("user");
         //补全一些信息
         order.setUserId(user.getId());
@@ -62,6 +62,8 @@ public class OrderCartController {
         request.setAttribute("payment", order.getPayment());
         //估计商品的到达时间设置三天后到期
         request.setAttribute("date", new DateTime().plusDays(3).toString("yyyy-MM-dd"));
+        //下单成功把购物车清空
+        CookieUtils.deleteCookie(request, response, TT_CART);
         return "success";
     }
 }

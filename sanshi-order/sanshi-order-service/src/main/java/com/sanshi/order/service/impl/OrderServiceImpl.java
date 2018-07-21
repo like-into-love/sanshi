@@ -89,6 +89,8 @@ public class OrderServiceImpl implements OrderService {
             e.printStackTrace();
             return TaotaoResult.build(500, "插入订单物流信息失败");
         }
+
+
         //返回订单号
         return TaotaoResult.ok(orderId);
     }
