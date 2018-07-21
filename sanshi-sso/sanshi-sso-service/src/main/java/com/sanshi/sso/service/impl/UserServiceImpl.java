@@ -5,7 +5,6 @@ import com.sanshi.pojo.TbUser;
 import com.sanshi.result.TaotaoResult;
 import com.sanshi.sso.jedis.JedisClient;
 import com.sanshi.sso.service.UserService;
-import com.sanshi.utils.CookieUtils;
 import com.sanshi.utils.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

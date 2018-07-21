@@ -160,6 +160,12 @@ public final class CookieUtils {
 
     /**
      * 设置Cookie的值，并使其在指定时间内生效
+     * 关于域名等级划分如下：
+     * <p>
+     * 顶级域名：格式为***.***，最显著的标志就是域名中只有一个点号“.”，如baidu.com
+     * 二级域名：格式为***.***.***，最显著的标志就是域名中有两个点号“.”，如www.baidu.com或者zhidao.baidu.com
+     * 三级域名：格式为***.***.***.***，最显著的标志就是域名中有三个点号“.”。
+     * 其中顶级域名还有划分，如国际顶级域名，如.com；国家顶级域名，如.cn；地区域名，如.hk等
      *
      * @param cookieMaxage cookie生效的最大秒数
      */
@@ -190,6 +196,10 @@ public final class CookieUtils {
     }
 
     /**
+     * 顶级域名：格式为***.***，最显著的标志就是域名中只有一个点号“.”，如baidu.com
+     * 二级域名：格式为***.***.***，最显著的标志就是域名中有两个点号“.”，如www.baidu.com或者zhidao.baidu.com
+     * 三级域名：格式为***.***.***.***，最显著的标志就是域名中有三个点号“.”。
+     * 其中顶级域名还有划分，如国际顶级域名，如.com；国家顶级域名，如.cn；地区域名，如.hk等
      * 得到cookie的域名
      */
     private static final String getDomainName(HttpServletRequest request) {
@@ -209,6 +219,7 @@ public final class CookieUtils {
                 // www.xxx.com.cn
                 domainName = "." + domains[len - 3] + "." + domains[len - 2] + "." + domains[len - 1];
             } else if (len <= 3 && len > 1) {
+                //截取到第一个点后，比如 www.jd.com, 搜索页面就是 search.jd.com 以.jd.com，必须前面以点开始
                 // xxx.com or xxx.cn
                 domainName = "." + domains[len - 2] + "." + domains[len - 1];
             } else {
