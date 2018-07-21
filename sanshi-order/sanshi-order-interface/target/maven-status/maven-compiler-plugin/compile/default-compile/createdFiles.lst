@@ -1,3 +1,0 @@
-com\sanshi\order\service\OrderService.class
-com\sanshi\order\jedis\JedisClient.class
-com\sanshi\order\pojo\Order.class
